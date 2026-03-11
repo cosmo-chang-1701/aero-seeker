@@ -9,6 +9,7 @@
 [![Three.js](https://img.shields.io/badge/Three.js-r160-black?logo=three.js)](https://threejs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.1-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green)](./LICENSE)
+[![Vercel](https://img.shields.io/badge/Vercel-Deployed-black?logo=vercel)](https://aero-seeker-3qk6q90pnd.vercel.app/)
 
 **Aero-Seeker** 是一個基於 React 與 Three.js 構建的科幻風格空氣動力學/風洞模擬視覺化實驗室 (Wind Tunnel Lab)。本專案模擬了虛擬飛行器 (如 F7A Hornet) 在不同環境參數 (馬赫數、攻角、側滾等) 下的氣流與激波 (Shockwave) 反應，並透過高科技感 (Sci-Fi) 的 HUD 與介面呈現資料遙測畫面。
 
@@ -16,7 +17,7 @@
 
 ## 🔗 Demo
 
-- 線上展示: https://aero-seeker-3qk6q90pnd.vercel.app/
+- **🌐 線上展示 (Live Demo):** [https://aero-seeker-3qk6q90pnd.vercel.app/](https://aero-seeker-3qk6q90pnd.vercel.app/)
 
 ---
 
