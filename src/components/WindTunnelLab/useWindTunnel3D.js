@@ -2,6 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 const RANDOM_TABLE_SIZE = 16384;
+const STREAMLINE_INITIAL_LENGTH = 2.4;
+const STREAMLINE_OPACITY = 0.42;
+const STREAMLINE_OSCILLATION_FAST = 4.5;
+const STREAMLINE_OSCILLATION_BASE = 2.2;
+const STREAMLINE_INDEX_OFFSET = 0.037;
+const STREAMLINE_POSITION_OFFSET = 0.14;
+const STREAMLINE_BIAS_BASE = 0.04;
+const STREAMLINE_BIAS_PER_MACH = 0.015;
 const randomTable = new Float32Array(RANDOM_TABLE_SIZE);
 for (let i = 0; i < RANDOM_TABLE_SIZE; i++) {
   randomTable[i] = Math.random();
@@ -187,7 +195,7 @@ export const useWindTunnel3D = ({ mach, aoa, roll = 0, isStall, isReducedMotion,
       posArray[i*6] = x; 
       posArray[i*6+1] = y; 
       posArray[i*6+2] = z; 
-      posArray[i*6+3] = x + 2.4; 
+      posArray[i*6+3] = x + STREAMLINE_INITIAL_LENGTH; 
       posArray[i*6+4] = y; 
       posArray[i*6+5] = z;
       for(let c = 0; c < 6; c += 3) { 
@@ -199,7 +207,7 @@ export const useWindTunnel3D = ({ mach, aoa, roll = 0, isStall, isReducedMotion,
     
     linesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3).setUsage(THREE.DynamicDrawUsage)); 
     linesGeo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3).setUsage(THREE.DynamicDrawUsage)); 
-    const linesMat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.42, blending: THREE.AdditiveBlending, depthWrite: false }); 
+    const linesMat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: STREAMLINE_OPACITY, blending: THREE.AdditiveBlending, depthWrite: false }); 
     const flowSystem = new THREE.LineSegments(linesGeo, linesMat); 
     scene.add(flowSystem); 
     
@@ -266,7 +274,7 @@ export const useWindTunnel3D = ({ mach, aoa, roll = 0, isStall, isReducedMotion,
     container.addEventListener('wheel', handleWheel, { passive: false });
 
     let animationFrameId;
-    const animate = () => {
+    const animate = (time = 0) => {
       animationFrameId = requestAnimationFrame(animate);
 
       const { mach: currentMach, aoa: currentAoa, roll: currentRoll = 0, isStall: currentStall, density: currentDensity } = stateRef.current;
@@ -322,7 +330,7 @@ export const useWindTunnel3D = ({ mach, aoa, roll = 0, isStall, isReducedMotion,
       const cosRoll = Math.cos(f7aGroup.rotation.x); 
       const sinRoll = Math.sin(f7aGroup.rotation.x); 
       const speedBase = currentMach * 1.5 + 0.4; 
-      const flowTime = performance.now() * 0.001;
+      const flowTime = time * 0.001;
       
       const isSupersonic = currentMach >= 1.0;
       const shockConeTan = isSupersonic ? Math.tan(Math.asin(1 / Math.max(currentMach, 1.001))) : 0;
@@ -400,8 +408,8 @@ export const useWindTunnel3D = ({ mach, aoa, roll = 0, isStall, isReducedMotion,
         }
 
         if (!impact) {
-          const streamlinePhase = flowTime * (currentStall ? 4.5 : 2.2) + i * 0.037 + localX * 0.14;
-          const streamlineBias = 0.04 + currentMach * 0.015;
+          const streamlinePhase = flowTime * (currentStall ? STREAMLINE_OSCILLATION_FAST : STREAMLINE_OSCILLATION_BASE) + i * STREAMLINE_INDEX_OFFSET + localX * STREAMLINE_POSITION_OFFSET;
+          const streamlineBias = STREAMLINE_BIAS_BASE + currentMach * STREAMLINE_BIAS_PER_MACH;
           deflect_y += Math.sin(streamlinePhase) * streamlineBias;
           deflect_z += Math.cos(streamlinePhase * 0.9) * streamlineBias * 0.65;
         }

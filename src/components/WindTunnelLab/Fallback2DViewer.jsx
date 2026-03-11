@@ -1,5 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 
+const STREAMLINE_TIME_SCALE = 0.0018;
+const STREAMLINE_INDEX_PHASE = 0.03;
+const STREAMLINE_CURVE_FREQUENCY = 0.75;
+const TURBULENT_SWIRL_MULTIPLIER = 1.4;
+const CALM_SWIRL_MULTIPLIER = 0.7;
+const TURBULENT_BOW_MULTIPLIER = 1.2;
+const CALM_BOW_MULTIPLIER = 0.45;
+
 const Fallback2DViewer = ({ mach, aoa, roll = 0, isStall, density = 1.0 }) => {
   const canvasRef = useRef(null);
 
@@ -28,6 +36,7 @@ const Fallback2DViewer = ({ mach, aoa, roll = 0, isStall, density = 1.0 }) => {
       
       const width = canvas.width;
       const height = canvas.height;
+      const frameTimePhase = time * STREAMLINE_TIME_SCALE;
 
       streamlines.forEach((p, index) => {
         p.speed = (mach * 10 + 2) + (p.length / 100);
@@ -48,9 +57,9 @@ const Fallback2DViewer = ({ mach, aoa, roll = 0, isStall, density = 1.0 }) => {
           p.y = Math.random() * height;
         }
 
-        const timePhase = time * 0.0018 + p.offsetY + index * 0.03;
-        const swirl = Math.sin(timePhase) * p.amplitude * (isTurbulent ? 1.4 : 0.7);
-        const bow = Math.cos(timePhase * 0.75) * p.curvature * (isTurbulent ? 1.2 : 0.45);
+        const timePhase = frameTimePhase + p.offsetY + index * STREAMLINE_INDEX_PHASE;
+        const swirl = Math.sin(timePhase) * p.amplitude * (isTurbulent ? TURBULENT_SWIRL_MULTIPLIER : CALM_SWIRL_MULTIPLIER);
+        const bow = Math.cos(timePhase * STREAMLINE_CURVE_FREQUENCY) * p.curvature * (isTurbulent ? TURBULENT_BOW_MULTIPLIER : CALM_BOW_MULTIPLIER);
 
         ctx.beginPath();
         ctx.moveTo(p.x, currentY);
