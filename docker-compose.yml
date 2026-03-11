@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  aero-seeker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aero-seeker
+    ports:
+      - "8080:80"
+    restart: always
+    networks:
+      - aero-seeker-network
+
+networks:
+  aero-seeker-network:
+    driver: bridge
