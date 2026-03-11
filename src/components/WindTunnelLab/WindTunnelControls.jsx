@@ -78,7 +78,7 @@ const WindTunnelControls = ({ mach, aoa, roll, density, setMach, setAoa, setRoll
 
         <div>
           <div className="flex justify-between mb-2">
-            <label htmlFor="density-input" className="text-[11px] text-cyan-300/70 uppercase tracking-wider font-semibold">粒子密度 (渲染精度)</label>
+            <label htmlFor="density-input" className="text-[11px] text-cyan-300/70 uppercase tracking-wider font-semibold">氣流密度 (渲染精度)</label>
           </div>
           <input 
             id="density-input"
