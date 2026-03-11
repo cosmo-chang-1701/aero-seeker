@@ -13,13 +13,14 @@ const Fallback2DViewer = ({ mach, aoa, roll = 0, isStall, density = 1.0 }) => {
     const baseLines = isStall ? 120 : 60;
     const numLines = Math.floor(baseLines * density);
     
-    // Initialize particles
-    let particles = Array.from({ length: numLines }).map(() => ({
+    let streamlines = Array.from({ length: numLines }).map(() => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       speed: 0,
       length: 50 + Math.random() * 100,
       offsetY: Math.random() * 1000,
+      amplitude: 4 + Math.random() * 12,
+      curvature: 6 + Math.random() * 18,
     }));
 
     const animate = (time) => {
@@ -28,7 +29,7 @@ const Fallback2DViewer = ({ mach, aoa, roll = 0, isStall, density = 1.0 }) => {
       const width = canvas.width;
       const height = canvas.height;
 
-      particles.forEach(p => {
+      streamlines.forEach((p, index) => {
         p.speed = (mach * 10 + 2) + (p.length / 100);
         p.x -= p.speed;
         
@@ -47,9 +48,18 @@ const Fallback2DViewer = ({ mach, aoa, roll = 0, isStall, density = 1.0 }) => {
           p.y = Math.random() * height;
         }
 
+        const timePhase = time * 0.0018 + p.offsetY + index * 0.03;
+        const swirl = Math.sin(timePhase) * p.amplitude * (isTurbulent ? 1.4 : 0.7);
+        const bow = Math.cos(timePhase * 0.75) * p.curvature * (isTurbulent ? 1.2 : 0.45);
+
         ctx.beginPath();
         ctx.moveTo(p.x, currentY);
-        ctx.lineTo(p.x + p.length, currentY);
+        ctx.quadraticCurveTo(
+          p.x + p.length * 0.45,
+          currentY + bow,
+          p.x + p.length,
+          currentY + swirl
+        );
         
         if (isTurbulent) {
           ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)'; // amber-500
@@ -70,7 +80,7 @@ const Fallback2DViewer = ({ mach, aoa, roll = 0, isStall, density = 1.0 }) => {
       if (parent) {
         canvas.width = parent.clientWidth;
         canvas.height = parent.clientHeight;
-        particles.forEach(p => p.y = Math.random() * canvas.height);
+        streamlines.forEach(p => p.y = Math.random() * canvas.height);
       }
     };
     

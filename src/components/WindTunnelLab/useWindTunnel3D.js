@@ -187,7 +187,7 @@ export const useWindTunnel3D = ({ mach, aoa, roll = 0, isStall, isReducedMotion,
       posArray[i*6] = x; 
       posArray[i*6+1] = y; 
       posArray[i*6+2] = z; 
-      posArray[i*6+3] = x + 1; 
+      posArray[i*6+3] = x + 2.4; 
       posArray[i*6+4] = y; 
       posArray[i*6+5] = z;
       for(let c = 0; c < 6; c += 3) { 
@@ -199,7 +199,7 @@ export const useWindTunnel3D = ({ mach, aoa, roll = 0, isStall, isReducedMotion,
     
     linesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3).setUsage(THREE.DynamicDrawUsage)); 
     linesGeo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3).setUsage(THREE.DynamicDrawUsage)); 
-    const linesMat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false }); 
+    const linesMat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.42, blending: THREE.AdditiveBlending, depthWrite: false }); 
     const flowSystem = new THREE.LineSegments(linesGeo, linesMat); 
     scene.add(flowSystem); 
     
@@ -322,6 +322,7 @@ export const useWindTunnel3D = ({ mach, aoa, roll = 0, isStall, isReducedMotion,
       const cosRoll = Math.cos(f7aGroup.rotation.x); 
       const sinRoll = Math.sin(f7aGroup.rotation.x); 
       const speedBase = currentMach * 1.5 + 0.4; 
+      const flowTime = performance.now() * 0.001;
       
       const isSupersonic = currentMach >= 1.0;
       const shockConeTan = isSupersonic ? Math.tan(Math.asin(1 / Math.max(currentMach, 1.001))) : 0;
@@ -398,6 +399,13 @@ export const useWindTunnel3D = ({ mach, aoa, roll = 0, isStall, isReducedMotion,
           }
         }
 
+        if (!impact) {
+          const streamlinePhase = flowTime * (currentStall ? 4.5 : 2.2) + i * 0.037 + localX * 0.14;
+          const streamlineBias = 0.04 + currentMach * 0.015;
+          deflect_y += Math.sin(streamlinePhase) * streamlineBias;
+          deflect_z += Math.cos(streamlinePhase * 0.9) * streamlineBias * 0.65;
+        }
+
         let world_deflect_y = deflect_y * cosRoll - deflect_z * sinRoll;
         let world_deflect_z = deflect_y * sinRoll + deflect_z * cosRoll;
 
@@ -423,7 +431,7 @@ export const useWindTunnel3D = ({ mach, aoa, roll = 0, isStall, isReducedMotion,
         positions[idx0] = x; 
         positions[idx0 + 1] = y; 
         positions[idx0 + 2] = z;
-        const tailSpeed = 0.4;
+        const tailSpeed = currentStall ? 0.12 : Math.max(0.12, 0.22 - currentMach * 0.03);
         positions[idx0 + 3] += (x - positions[idx0 + 3]) * tailSpeed;
         positions[idx0 + 4] += (y - positions[idx0 + 4]) * tailSpeed;
         positions[idx0 + 5] += (z - positions[idx0 + 5]) * tailSpeed;
