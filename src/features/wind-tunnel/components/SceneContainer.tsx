@@ -63,7 +63,6 @@ function InnerScene() {
           if (Math.abs(targetAoA - aoa) > 0.05) { aoa += (targetAoA - aoa) * 0.15; stateChanged = true; } else aoa = targetAoA;
           if (Math.abs(targetYaw - yaw) > 0.05) { yaw += (targetYaw - yaw) * 0.15; stateChanged = true; } else yaw = targetYaw;
           if (Math.abs(targetRoll - roll) > 0.05) { roll += (targetRoll - roll) * 0.15; stateChanged = true; } else roll = targetRoll;
-          targetRoll *= 0.9;
         } else {
           targetAoA = aoa; targetYaw = yaw; targetRoll = roll;
         }

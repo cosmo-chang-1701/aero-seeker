@@ -70,12 +70,9 @@ export function usePointerControl(canvasElement: HTMLCanvasElement | null) {
           let newTargetYaw = state.targetYaw + (e.movementX || 0) * 0.15;
           newTargetAoA = Math.max(-90, Math.min(90, newTargetAoA));
           newTargetYaw = Math.max(-180, Math.min(180, newTargetYaw));
-          let newTargetRoll = -(e.movementX || 0) * 1.5;
-          newTargetRoll = Math.max(-60, Math.min(60, newTargetRoll));
           store.getState().setInputState({
             targetAoA: newTargetAoA,
             targetYaw: newTargetYaw,
-            targetRoll: newTargetRoll,
           });
         }
       }
