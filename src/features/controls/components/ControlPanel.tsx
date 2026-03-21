@@ -42,18 +42,35 @@ export function ControlPanel() {
       </div>
 
       {/* Drag upload zone */}
-      <div className="border border-dashed border-cyan-700/60 bg-cyan-950/20 rounded p-3 flex flex-col items-center justify-center gap-2 text-center transition-colors hover:bg-cyan-900/30 hover:border-cyan-400 cursor-pointer">
+      <div 
+        className="border border-dashed border-cyan-700/60 bg-cyan-950/20 rounded p-3 flex flex-col items-center justify-center gap-2 text-center transition-colors hover:bg-cyan-900/30 hover:border-cyan-400 cursor-pointer"
+        onClick={() => document.getElementById('model-upload-input')?.click()}
+      >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-cyan-400 animate-bounce">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
           <polyline points="17 8 12 3 7 8" />
           <line x1="12" x2="12" y1="3" y2="15" />
         </svg>
         <h1 className="text-sm font-bold text-cyan-50 tracking-wider uppercase">
-          {objectType === 'custom' ? '自訂模組分析' : '拖曳 3D 模型檔案至此'}
+          {objectType === 'custom' ? '自訂模組分析' : '點擊或拖曳檔案至此'}
         </h1>
         <p className="text-[9px] text-cyan-500/70 tracking-widest uppercase">
           {objectType === 'custom' ? '已載入外部結構' : '支援 .GLTF / .GLB 格式'}
         </p>
+        <input 
+          id="model-upload-input"
+          type="file" 
+          accept=".gltf,.glb" 
+          className="hidden" 
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              window.dispatchEvent(new CustomEvent('load-custom-model', { detail: file }));
+              // Reset input value to allow selecting the same file again
+              e.target.value = '';
+            }
+          }} 
+        />
       </div>
 
       {/* Voice + VR controls */}
