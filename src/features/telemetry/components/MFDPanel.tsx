@@ -72,7 +72,7 @@ export function MFDPanel() {
             <button
               key={index}
               onClick={() => handleTestPointClick(index)}
-              className={`w-full text-left p-3 sc-btn transition-colors duration-200 border outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 ${isActive
+              className={`w-full text-left p-3 sc-btn transition-colors duration-200 border outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 cursor-pointer ${isActive
                 ? 'bg-cyan-900/40 border-cyan-500/50 shadow-[inset_0_0_10px_rgba(6,182,212,0.1)]'
                 : 'bg-[#061222]/50 border-transparent hover:bg-cyan-900/20 hover:border-cyan-800/50'
                 }`}

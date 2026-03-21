@@ -30,7 +30,7 @@ export function EnvironmentPanel() {
             step="0.01"
             value={density}
             onChange={(e) => setSimParam({ density: parseFloat(e.target.value) })}
-            className="w-full h-1 bg-cyan-950 accent-cyan-400"
+            className="w-full h-1 bg-cyan-950 accent-cyan-400 cursor-pointer"
           />
         </div>
 
@@ -49,7 +49,7 @@ export function EnvironmentPanel() {
             step="0.01"
             value={smokeSize}
             onChange={(e) => setSimParam({ smokeSize: parseFloat(e.target.value) })}
-            className="w-full h-1 bg-cyan-950 accent-cyan-400"
+            className="w-full h-1 bg-cyan-950 accent-cyan-400 cursor-pointer"
           />
         </div>
 
@@ -59,10 +59,10 @@ export function EnvironmentPanel() {
             煙流視覺化模式
           </label>
           <div className="flex space-x-2">
-            <CyberButton active={smokeMode === 1} className="flex-1 py-1.5" onClick={() => setSimParam({ smokeMode: 1 })}>
+            <CyberButton active={smokeMode === 1} className="flex-1 py-1.5 cursor-pointer" onClick={() => setSimParam({ smokeMode: 1 })}>
               動態煙流
             </CyberButton>
-            <CyberButton active={smokeMode === 0} className="flex-1 py-1.5" onClick={() => setSimParam({ smokeMode: 0 })}>
+            <CyberButton active={smokeMode === 0} className="flex-1 py-1.5 cursor-pointer" onClick={() => setSimParam({ smokeMode: 0 })}>
               原始白煙
             </CyberButton>
           </div>
@@ -74,10 +74,10 @@ export function EnvironmentPanel() {
             泛光特效 (Bloom)
           </label>
           <div className="flex space-x-2">
-            <CyberButton active={bloomEnabled} className="flex-1 py-1.5" onClick={() => setSimParam({ bloomEnabled: true })}>
+            <CyberButton active={bloomEnabled} className="flex-1 py-1.5 cursor-pointer" onClick={() => setSimParam({ bloomEnabled: true })}>
               開啟
             </CyberButton>
-            <CyberButton active={!bloomEnabled} className="flex-1 py-1.5" onClick={() => setSimParam({ bloomEnabled: false })}>
+            <CyberButton active={!bloomEnabled} className="flex-1 py-1.5 cursor-pointer" onClick={() => setSimParam({ bloomEnabled: false })}>
               關閉
             </CyberButton>
           </div>

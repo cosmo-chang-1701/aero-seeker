@@ -109,7 +109,7 @@ export const useSimulationStore = create<SimulationState>((set) => ({
   aoa: 0,
   roll: 0,
   yaw: 0,
-  density: 0.25,
+  density: 0.30,
   smokeSize: 0.75,
   objectType: 'f35',
   smokeMode: 1,
