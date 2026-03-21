@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+/* Base resets */
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #020611;
+  overflow: hidden;
+}
+
+/* Custom scrollbar */
+.sc-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sc-scrollbar::-webkit-scrollbar-track {
+  background: rgba(6, 182, 212, 0.05);
+}
+
+.sc-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(6, 182, 212, 0.5);
+}
+
+/* Cyber panel clip-path */
+.sc-panel {
+  clip-path: polygon(15px 0,
+      100% 0,
+      100% calc(100% - 15px),
+      calc(100% - 15px) 100%,
+      0 100%,
+      0 15px);
+}
+
+/* Cyber button clip-path */
+.sc-btn {
+  clip-path: polygon(8px 0,
+      100% 0,
+      100% calc(100% - 8px),
+      calc(100% - 8px) 100%,
+      0 100%,
+      0 8px);
+}
+
+/* Scanlines CRT overlay effect */
+.scanlines::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background:
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg,
+      rgba(255, 0, 0, 0.06),
+      rgba(0, 255, 0, 0.02),
+      rgba(0, 0, 255, 0.06));
+  z-index: 2;
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+}
+
+/* Canvas container absolute positioning */
+#canvas-container {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* VR Button style overrides — renders as plain text status */
+#VRButton {
+  position: static !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  letter-spacing: inherit !important;
+  color: inherit !important;
+  opacity: 1 !important;
+  text-transform: uppercase !important;
+  min-width: auto !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
