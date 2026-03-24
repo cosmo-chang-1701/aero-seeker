@@ -7,7 +7,6 @@ interface CyberButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
 
 /**
  * Reusable button with clip-path cut corners.
- * Wraps the `.sc-btn` CSS class from source_index.html L29.
  */
 export function CyberButton({ children, active = false, className = '', ...props }: CyberButtonProps) {
   const baseClass = 'sc-btn text-[11px] font-bold tracking-wider';

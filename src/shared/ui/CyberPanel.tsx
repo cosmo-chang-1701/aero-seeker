@@ -7,7 +7,6 @@ interface CyberPanelProps {
 
 /**
  * Reusable panel with clip-path cut corners.
- * Wraps the `.sc-panel` CSS class from source_index.html L28.
  */
 export function CyberPanel({ children, className = '' }: CyberPanelProps) {
   return (

@@ -19,6 +19,7 @@ export function JetModel() {
   const f35GroupRef = useRef<THREE.Group>(null);
   const glowRef = useRef<THREE.Mesh>(null);
   const innerGlowRef = useRef<THREE.Mesh>(null);
+  const machRingsRef = useRef<THREE.InstancedMesh>(null);
 
   const darkMetal = useMemo(() => new THREE.MeshStandardMaterial(DARK_METAL_PARAMS), []);
   const glassMat = useMemo(() => new THREE.MeshStandardMaterial(GLASS_MAT_PARAMS), []);
@@ -69,6 +70,24 @@ export function JetModel() {
     return geo;
   }, []);
 
+  const machRingGeo = useMemo(() => {
+    // An elongated sphere creates a bright dense core that accurately simulates shock diamonds with additive blending
+    const geo = new THREE.SphereGeometry(0.12, 16, 16);
+    geo.scale(2.5, 1.0, 1.0);
+    return geo;
+  }, []);
+
+  const machRingMat = useMemo(() => {
+    return new THREE.MeshBasicMaterial({
+      ...INNER_GLOW_MAT_PARAMS,
+      color: 0xffffff,
+      opacity: 0.0,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+  }, []);
+
   // Fuselage + nose geometries
   const fuselageGeo = useMemo(() => new THREE.CylinderGeometry(0.7, 0.7, 5.2, 32).rotateZ(Math.PI / 2), []);
   const noseGeo = useMemo(() => new THREE.ConeGeometry(0.65, 2.2, 32).rotateZ(Math.PI / 2), []);
@@ -89,6 +108,31 @@ export function JetModel() {
       innerGlowRef.current.scale.copy(params.innerScale);
       (innerGlowRef.current.material as THREE.MeshBasicMaterial).opacity = params.innerOpacity;
       (innerGlowRef.current.material as THREE.MeshBasicMaterial).color.copy(params.innerColor);
+
+      if (machRingsRef.current) {
+        const dummy = new THREE.Object3D();
+        for (let i = 0; i < 12; i++) {
+          if (i < params.machRingsCount) {
+            const xPos = 0.2 + i * params.machRingSpacing;
+            const progress = i / Math.max(1, params.machRingsCount - 1);
+            // Rings taper off and get smaller towards the tail end
+            const scaleY = Math.max(0.1, (1.0 - progress * 0.8) * (0.8 + state.mach * 0.1));
+            const scaleX = Math.max(0.2, 1.0 - progress * 0.5 + (Math.random() * 0.1));
+            dummy.position.set(xPos, 0, 0);
+            dummy.scale.set(scaleX, scaleY, scaleY);
+            dummy.updateMatrix();
+            machRingsRef.current.setMatrixAt(i, dummy.matrix);
+          } else {
+            dummy.position.set(0, 0, 0);
+            dummy.scale.set(0, 0, 0);
+            dummy.updateMatrix();
+            machRingsRef.current.setMatrixAt(i, dummy.matrix);
+          }
+        }
+        machRingsRef.current.instanceMatrix.needsUpdate = true;
+        (machRingsRef.current.material as THREE.MeshBasicMaterial).opacity = params.machRingOpacity;
+        (machRingsRef.current.material as THREE.MeshBasicMaterial).color.copy(params.innerColor);
+      }
     }
 
     // Custom model emissive
@@ -119,6 +163,12 @@ export function JetModel() {
       <mesh ref={glowRef} geometry={glowGeo} material={glowMat} position={[3.3, 0, 0]}>
         <mesh ref={innerGlowRef} geometry={innerGlowGeo} material={innerGlowMat} />
       </mesh>
+      {/* Mach Rings */}
+      <instancedMesh
+        ref={machRingsRef}
+        args={[machRingGeo, machRingMat, 12]}
+        position={[3.3, 0, 0]}
+      />
       {/* Wings */}
       <mesh geometry={wingGeo} material={armorMat} rotation={[Math.PI / 2, 0, 0]} position={[0.2, 0, 1.6]} />
       <mesh geometry={wingGeo} material={armorMat} rotation={[-Math.PI / 2, 0, 0]} position={[0.2, 0, -1.6]} />

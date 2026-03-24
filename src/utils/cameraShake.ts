@@ -1,6 +1,5 @@
 /**
  * Camera shake intensity calculator.
- * Pure function — maps from source_index.html L1295-L1297.
  */
 export function computeShakeIntensity(mach: number, aoa: number, windSpeed: number): number {
   const transShake = mach > 0.85 && mach < 1.15
