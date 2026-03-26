@@ -6,7 +6,7 @@ services:
     container_name: aero-seeker
     ports:
       - "8080:80"
-    restart: always
+    restart: unless-stopped
     networks:
       - aero-seeker-network
 
